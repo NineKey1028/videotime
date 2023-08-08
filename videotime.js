@@ -1,1 +1,93 @@
-javascript:(function()%20{%20%20%20%20//%20Check%20if%20our%20UI%20has%20already%20been%20injected%20%20%20%20if(document.getElementById('inputHours'))%20return;%20%20%20%20//%20Create%20the%20input%20boxes%20and%20button%20%20%20%20const%20inputHours%20=%20document.createElement('input');%20%20%20%20inputHours.id%20=%20'inputHours';%20%20%20%20inputHours.placeholder%20=%20'時';%20%20%20%20const%20inputTime%20=%20document.createElement('input');%20%20%20%20inputTime.id%20=%20'inputTime';%20%20%20%20inputTime.placeholder%20=%20'分:秒';%20%20%20%20const%20copyButton%20=%20document.createElement('button');%20%20%20%20copyButton.innerHTML%20=%20'Copy';%20%20%20%20//%20Append%20elements%20to%20the%20page%20%20%20%20const%20root%20=%20document.getElementById('root');%20%20%20%20root.appendChild(inputHours);%20%20%20%20root.appendChild(inputTime);%20%20%20%20root.appendChild(copyButton);%20%20%20%20//%20Copy%20the%20time%20to%20clipboard%20%20%20%20const%20copyToClipboard%20=%20()%20=>%20{%20%20%20%20%20%20%20%20const%20hours%20=%20inputHours.value;%20%20%20%20%20%20%20%20const%20time%20=%20inputTime.value;%20%20%20%20%20%20%20%20const%20fullTime%20=%20hours%20?%20hours%20+%20':'%20+%20time%20:%20time;%20%20%20%20%20%20%20%20navigator.clipboard.writeText(fullTime);%20%20%20%20};%20%20%20%20//%20Handle%20time%20adjustments%20%20%20%20const%20adjustTime%20=%20(direction)%20=>%20{%20%20%20%20%20%20%20%20let%20[minutes,%20seconds]%20=%20inputTime.value.split(':').map(Number);%20%20%20%20%20%20%20%20if(isNaN(minutes))%20minutes%20=%200;%20%20%20%20%20%20%20%20if(isNaN(seconds))%20seconds%20=%200;%20%20%20%20%20%20%20%20switch(direction)%20{%20%20%20%20%20%20%20%20%20%20%20%20case%20'ArrowUp':%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20seconds%20+=%201;%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20break;%20%20%20%20%20%20%20%20%20%20%20%20case%20'ArrowDown':%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20seconds%20-=%201;%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20break;%20%20%20%20%20%20%20%20%20%20%20%20case%20'ArrowLeft':%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20seconds%20-=%2010;%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20break;%20%20%20%20%20%20%20%20%20%20%20%20case%20'ArrowRight':%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20seconds%20+=%2010;%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20break;%20%20%20%20%20%20%20%20}%20%20%20%20%20%20%20%20//%20Handle%20time%20overflow%20and%20underflow%20%20%20%20%20%20%20%20while(seconds%20>=%2060)%20{%20%20%20%20%20%20%20%20%20%20%20%20minutes%20+=%201;%20%20%20%20%20%20%20%20%20%20%20%20seconds%20-=%2060;%20%20%20%20%20%20%20%20}%20%20%20%20%20%20%20%20while(seconds%20<%200)%20{%20%20%20%20%20%20%20%20%20%20%20%20minutes%20-=%201;%20%20%20%20%20%20%20%20%20%20%20%20seconds%20+=%2060;%20%20%20%20%20%20%20%20}%20%20%20%20%20%20%20%20inputTime.value%20=%20`${minutes}:${seconds%20<%2010%20?%20'0'%20:%20''}${seconds}`;%20%20%20%20};%20%20%20%20//%20Listen%20for%20key%20events%20to%20adjust%20time%20and%20handle%20enter%20key%20%20%20%20document.addEventListener('keydown',%20(event)%20=>%20{%20%20%20%20%20%20%20%20if(['ArrowUp',%20'ArrowDown',%20'ArrowLeft',%20'ArrowRight'].includes(event.key))%20{%20%20%20%20%20%20%20%20%20%20%20%20adjustTime(event.key);%20%20%20%20%20%20%20%20%20%20%20%20copyToClipboard();%20%20%20%20%20%20%20%20%20%20%20%20event.preventDefault();%20%20%20%20%20%20%20%20}%20else%20if(event.key%20===%20'Enter')%20{%20%20%20%20%20%20%20%20%20%20%20%20const%20hours%20=%20inputHours.value;%20%20%20%20%20%20%20%20%20%20%20%20const%20[minutes,%20seconds]%20=%20inputTime.value.split(':');%20%20%20%20%20%20%20%20%20%20%20%20if(hours%20&&%20minutes%20&&%20seconds)%20{%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20inputHours.value%20=%20'';%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20inputTime.value%20=%20`${hours}:${minutes}:${seconds}`;%20%20%20%20%20%20%20%20%20%20%20%20}%20else%20{%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20inputHours.value%20=%20minutes;%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20inputTime.value%20=%20`${seconds}`;%20%20%20%20%20%20%20%20%20%20%20%20}%20%20%20%20%20%20%20%20%20%20%20%20event.preventDefault();%20%20%20%20%20%20%20%20}%20%20%20%20});%20%20%20%20//%20Copy%20time%20when%20copy%20button%20is%20clicked%20%20%20%20copyButton.addEventListener('click',%20copyToClipboard);%20%20%20%20//%20Automatically%20split%20the%20time%20when%20pasting%20into%20inputTime%20%20%20%20inputTime.addEventListener('input',%20()%20=>%20{%20%20%20%20%20%20%20%20const%20[hours,%20minutes,%20seconds]%20=%20inputTime.value.split(':');%20%20%20%20%20%20%20%20if(hours%20&&%20minutes%20&&%20seconds)%20{%20%20%20%20%20%20%20%20%20%20%20%20inputHours.value%20=%20hours;%20%20%20%20%20%20%20%20%20%20%20%20inputTime.value%20=%20`${minutes}:${seconds}`;%20%20%20%20%20%20%20%20}%20%20%20%20});})();
+(function() {
+    var videoElement = document.querySelector('video');
+    
+    // 建立輸入框和按鈕
+    const hourInput = document.createElement('input');
+    hourInput.style.border = '1px solid black';
+    hourInput.placeholder = '時';
+    hourInput.id = 'hourInput';
+    
+    const timeInput = document.createElement('input');
+    timeInput.style.border = '1px solid black';
+    timeInput.placeholder = '分:秒';
+    timeInput.id = 'timeInput';
+
+    const copyButton = document.createElement('button');
+    copyButton.style.border = '1px solid black';
+    copyButton.innerText = 'copy';
+
+    const root = document.getElementById('root');
+    root.appendChild(hourInput);
+    root.appendChild(timeInput);
+    root.appendChild(copyButton);
+
+    timeInput.addEventListener('keydown', function(event) {
+        var values = timeInput.value.split(':').map(Number);
+        var hours = parseInt(hourInput.value) || 0;
+        var minutes = values[0], seconds = values[1];
+
+        switch (event.key) {
+            case 'ArrowLeft':
+                seconds -= 10;
+                break;
+            case 'ArrowRight':
+                seconds += 10;
+                break;
+            case 'ArrowDown':
+                seconds -= 1;
+                break;
+            case 'ArrowUp':
+                seconds += 1;
+                break;
+            case 'Enter':
+                videoElement.currentTime = hours * 3600 + minutes * 60 + seconds;
+                return;
+            default:
+                return;
+        }
+        
+        while (seconds >= 60) {
+            minutes += 1;
+            seconds -= 60;
+        }
+        while (seconds < 0) {
+            minutes -= 1;
+            seconds += 60;
+        }
+        while (minutes >= 60) {
+            hours += 1;
+            minutes -= 60;
+        }
+        while (minutes < 0) {
+            hours -= 1;
+            minutes += 60;
+        }
+
+        hourInput.value = hours;
+        timeInput.value = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+        timeInput.select();
+        document.execCommand('copy');
+    });
+
+    // 複製按鈕的功能
+    copyButton.addEventListener('click', () => {
+        var text = hourInput.value + ':' + timeInput.value;
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    });
+
+    // 監聽輸入框的貼上事件
+    timeInput.addEventListener('paste', (event) => {
+        setTimeout(() => {
+            const [hour, minutes, seconds] = timeInput.value.split(':').map(Number);
+            if (seconds !== undefined) {
+                hourInput.value = hour.toString();
+                timeInput.value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }, 0);
+    });
+})();
